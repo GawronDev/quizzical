@@ -1,25 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import StartScreen from "./components/StartScreen"
+import QuestionsScreen from "./components/QuestionsScreen";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+export default function App() {
+    const [quizStart, setQuizStart] = React.useState(true);
+    const [questions, setQuestions] = React.useState([]);
 
-export default App;
+    React.useEffect(() =>{
+        fetch("https://opentdb.com/api.php?amount=5")
+            .then(res => res.json())
+            .then(data => setQuestions(data))      
+    }, [])
+
+    return (
+        <section>
+            {quizStart ? <StartScreen changeScreen={setQuizStart} screenState={quizStart} />
+             : <QuestionsScreen questionsData={questions} />}
+        </section>
+    );
+};
